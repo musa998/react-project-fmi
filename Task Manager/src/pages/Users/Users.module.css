@@ -1,0 +1,15 @@
+.container {
+    margin-left: 80px;
+    margin-right: 80px;
+    border: 1px solid black;
+    margin-top: 5rem;
+}
+.userContainer {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+.username {
+    margin-right: 2rem;
+    margin-bottom: 1rem;
+}

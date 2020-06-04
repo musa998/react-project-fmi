@@ -1,0 +1,26 @@
+.item {
+    display: inline-block;
+    background-color: #4eaadd;
+    color: white;
+    border: 1px solid seagreen;
+    border-radius: 5px;
+    margin-right: 1rem;
+    margin-bottom: 0.4rem;
+    margin-top: 0.4rem;
+    padding: 6px;
+}
+.item:hover {
+    cursor: move;
+}
+.dragCloseBtn {
+    background-color: #4eaadd;
+    float: right;
+    border: none;
+    color: red;
+}
+.dragEditBtn {
+    background-color: #4eaadd;
+    float: right;
+    border: none;
+    color: green;
+}

@@ -1,0 +1,40 @@
+/* .header{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	 z-index: 1;
+} */
+.navbar{
+    /* display: flex;
+	padding: 8px 10px;
+	background: #fff;
+	border: none;
+	border-radius: 0; */
+	box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+	background-color: mediumpurple;
+}
+.title{
+	color: darkslategrey;
+	font-size: 23px;
+	line-height: 1.6;
+	text-decoration: none;
+}
+.buttonContainer{
+    display: flex;
+    margin-left: auto;
+    margin-right: 25px;
+}
+.login{
+    margin-right: 5px;
+    padding: 9px;
+    color: whitesmoke;
+}
+.register{
+    padding: 9px;
+    color: whitesmoke;
+}
+.logoutBtn{
+    padding: 9px;
+    color: whitesmoke;
+}
