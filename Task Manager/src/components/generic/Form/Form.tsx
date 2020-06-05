@@ -3,14 +3,16 @@ import React, { useState } from 'react';
 import * as taskmanager from 'api/taskmanager';
 import uniqid from 'uniqid';
 import { TaskModel } from 'types/models';
+import { useAuth } from 'hooks/domain/useAuth';
+
 
 const addItem = (title: string, description: string, grade: number,
-  items: TaskModel[], updateItems: any) => {
+  items: TaskModel[], updateItems: any, userId: string | undefined) => {
   if(title === ''){
     return;
   }
   const newItem = { id: uniqid(), title, description,
-    grade, status: 'active' };
+    grade, status: 'active', userId };
   const arr = [...items, newItem];
   taskmanager.createTask(arr);
   updateItems(arr);
@@ -23,6 +25,7 @@ type AddItemProps = {
 };
     
 const Form: React.FC<AddItemProps> = ({ type, updateItems, items }) => {
+  const { user } = useAuth();
   const [title, setTitle] = useState('');
   const [description, setdescription] = useState('');
   const [grade, setgrade] = useState(2);
@@ -57,7 +60,7 @@ const Form: React.FC<AddItemProps> = ({ type, updateItems, items }) => {
         type="submit"
         onClick={e => {
           e.preventDefault();
-          addItem(title, description, grade, items, updateItems);
+          addItem(title, description, grade, items, updateItems, user?.id);
           setTitle('');
           setdescription('');
           setgrade(0);

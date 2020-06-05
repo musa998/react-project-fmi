@@ -13,7 +13,6 @@ export type LoginData = {
 };
   
 export const register = async (data: RegisterData): Promise<string> => {
-  localStorage.setItem('me', JSON.stringify(data));
   const users = JSON.parse(localStorage.getItem('users') || '[]');
   const user = {
     id: uniqid(),
@@ -23,6 +22,7 @@ export const register = async (data: RegisterData): Promise<string> => {
   }; 
   users.push(user);
   localStorage.setItem('users', JSON.stringify(users));
+  localStorage.setItem('me', JSON.stringify(data.username));
   return JSON.stringify(data);
 };
   
@@ -43,7 +43,7 @@ export const login = async (data: LoginData): Promise<string | null> => {
   });
 
   if(succes){
-    
+    localStorage.setItem('me', JSON.stringify(data.username));
     return JSON.stringify(data);
   }
   return null;

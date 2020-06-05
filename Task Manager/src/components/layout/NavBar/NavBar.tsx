@@ -25,7 +25,9 @@ const NavBar: React.FC = ({ children }) => {
           <>
             <div className={classes.buttonContainer}>
               <Link className={classes.logoutBtn} to="/">Tasks</Link>
-              <Link className={classes.logoutBtn} to="/users">Users</Link>
+              {user.isAdmin ?
+                <Link className={classes.logoutBtn} to="/users">Users</Link>
+                : null}
               {/* <Link className={classes.logoutBtn} to={`/${user.username}`}>Profile</Link> */}
               <Link className={classes.logoutBtn} to="#" onClick={() => logout()}>Logout</Link>
             </div>

@@ -6,4 +6,5 @@ export type TaskModel = {
   description: string;
   grade: number;
   status: string;
+  userId: string;
 };

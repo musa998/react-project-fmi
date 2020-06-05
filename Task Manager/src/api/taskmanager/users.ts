@@ -1,12 +1,19 @@
 import { Me } from 'types/models';
 
 
-export const getMe = async (): Promise<Me> => {
+export const getMe = async (): Promise<Me | null> => {
 //   const res = await axios.get('/users/me');
   const res = JSON.parse(localStorage.getItem('me')!);
-  return res!;
-//   const res =  localStorage.getItem('me');
-//   return res!;
+  const users = JSON.parse(localStorage.getItem('users') || '[]');
+  let me: Me = { id: '', username: '', password: '', isAdmin: false };
+
+  users.forEach(function (user:  Me) {
+    if(JSON.stringify(user.username) === JSON.stringify(res)){
+      me = user;
+    }
+  });
+
+  return me;
 };
 
 export const getAllUsers = async (): Promise<Me[]> => {
@@ -14,9 +21,9 @@ export const getAllUsers = async (): Promise<Me[]> => {
   return users;
 };
 
-
 export const deleteUser = async (index: number | undefined):
 Promise<string> => {
+  console.log('delete user');
   const allUsers = JSON.parse(localStorage.getItem('users') || '[]');
   allUsers.splice(index, 1);
   localStorage.setItem('users', JSON.stringify(allUsers));
