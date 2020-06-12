@@ -19,7 +19,6 @@ function RootRoutes() {
 
         <Route exact path="/users" component={Users} />
         <Route exact path="/" component={Tasks} />
-
       </Switch>
     );
   }

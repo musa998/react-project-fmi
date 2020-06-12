@@ -22,11 +22,21 @@ export const getAllUsers = async (): Promise<Me[]> => {
 };
 
 export const deleteUser = async (index: number | undefined):
-Promise<string> => {
+Promise<Me[]> => {
   console.log('delete user');
   const allUsers = JSON.parse(localStorage.getItem('users') || '[]');
   allUsers.splice(index, 1);
   localStorage.setItem('users', JSON.stringify(allUsers));
 
-  return 'succes';
+  return allUsers;
+};
+
+export const updateUser = async (index: number, user: Me):
+Promise<Me[]> => {
+  console.log('update user');
+  const allUsers = JSON.parse(localStorage.getItem('users') || '[]');
+  allUsers[index].username = user.username;
+  localStorage.setItem('users', JSON.stringify(allUsers));
+
+  return allUsers;
 };

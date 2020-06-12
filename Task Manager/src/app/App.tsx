@@ -11,12 +11,6 @@ const history = createBrowserHistory();
 
 const queryConfig = {
   refetchAllOnWindowFocus: false,
-  // onError: (err: unknown) => {
-  //   const apiError = taskmanager.extractApiError(err);
-  //   if (apiError?.statusCode === 401) {
-  //     queryCache.setQueryData('me', undefined);
-  //   }
-  // },
 };
 export default function App() {
   return (

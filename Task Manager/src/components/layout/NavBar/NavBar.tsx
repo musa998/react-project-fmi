@@ -11,6 +11,7 @@ const NavBar: React.FC = ({ children }) => {
   const { isAuthenticated, user } = useAuth();
   const [logout] = useMutation(socialmedia.logout, {
     onSuccess: () => {
+      localStorage.removeItem('me');
       queryCache.setQueryData('me', undefined);
     }
   });
@@ -21,6 +22,7 @@ const NavBar: React.FC = ({ children }) => {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto" />
+        {console.log(isAuthenticated  && user?.username ? "asdasdasdas" : null)}
         { isAuthenticated && user ? (
           <>
             <div className={classes.buttonContainer}>

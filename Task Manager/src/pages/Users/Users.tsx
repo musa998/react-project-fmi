@@ -3,27 +3,50 @@ import { Button, Modal, Table } from 'react-bootstrap';
 import { Formik, FieldArray } from 'formik';
 import * as taskmanager from 'api/taskmanager';
 import { useQuery, useMutation, queryCache } from 'react-query';
-import { Me } from 'types/models';
+import { Me, TaskModel } from 'types/models';
+import { TextAreaField } from 'components/generic/FormControls';
 import classes from './Users.module.css';
 
 function Users() {
-  const { data: users } = useQuery(['users', 'all'], (key, u) =>  taskmanager.getAllUsers());  
-  const [allUsers, setallUsers] = useState<Me[] | undefined>([]); 
+  const { data: users } = useQuery(['users', 'all'], (key, u) =>
+    taskmanager.getAllUsers()
+  );
+  const [allUsers, setallUsers] = useState<Me[] | undefined>([]);
   const [arrayIndex, setarrayIndex] = useState<number>(0);
   const [userEntity, setuserEntity] = useState<Me>();
+  const [userToEdit, setuserToEdit] = useState<Me>();
 
-
-  
   const [show, setShow] = useState(false);
+
+  const [showEdit, setShowEdit] = useState(false);
+  const handleCloseEdit = () => setShowEdit(false);
+  const handleShowEdit = () => setShowEdit(true);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const [deleteUser] = useMutation(taskmanager.deleteUser, {
-    // onSuccess: (data) => {
-    //   queryCache.setQueryData('users', data); 
-    // },
+    onSuccess: (data) => {
+      queryCache.setQueryData('users', data);
+    },
   });
+
+  // const [updateUser] = useMutation(taskmanager.updateUser, {
+  //   // onSuccess: (data) => {
+  //   //   queryCache.setQueryData('users', data);
+  //   // },
+  // });
+
+
+  const editItem = (user: Me) => {
+    const usersArray = allUsers;
+    usersArray?.forEach(function (value, index) {
+      if (usersArray[index].id === user.id) {
+        usersArray[index].username = user.username;
+      }
+    });
+    queryCache.setQueryData('users', usersArray);
+  };
 
   useEffect(() => {
     setallUsers(users);
@@ -37,9 +60,16 @@ function Users() {
         <Formik
           initialValues={{
             users: allUsers,
+            username: userToEdit?.username,
           }}
           enableReinitialize={true}
-          onSubmit={(values, actions) => {}}
+          onSubmit={(values, actions) => {
+            const userEdit = {
+              id: userToEdit?.id,
+              username: values.username,
+            };
+            editItem(userEdit);
+          }}
         >
           {({
             values,
@@ -47,6 +77,7 @@ function Users() {
             handleChange,
             handleSubmit,
             resetForm,
+            isSubmitting,
             setFieldValue,
           }) => {
             // console.log(values.users);
@@ -58,44 +89,62 @@ function Users() {
                   action=""
                   onSubmit={handleSubmit}
                 >
-                  <h3 style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem' }}>
-                    All users:</h3>
+                  <h3
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginBottom: '3rem',
+                    }}
+                  >
+                    All users:
+                  </h3>
                   <Table striped bordered hover>
-                    <tbody> 
+                    <tbody>
                       <FieldArray
                         name="users"
-                        render={arrayHelpers => (
+                        render={(arrayHelpers) => (
                           <>
                             {values.users?.map((user, index) => (
                               <>
-                                                           
                                 {/* {user.status ? user.status : 'Empty' } */}
                                 <tr>
                                   <td>{user.username}</td>
                                   {/* <td>{timesheetentity.status ? timesheetentity.status : 'Empty' }</td> */}
-                                      
-                                  <td> <Button> 
-                                    Edit
-                                  </Button>
+
+                                  <td>
+                                    {' '}
+                                    <Button
+                                      onClick={() => {
+                                        setuserToEdit(user);
+                                        handleShowEdit();
+                                      }}
+                                    >
+                                      Edit
+                                    </Button>
                                   </td>
-                                  <td><Button
-                                    variant='danger'
-                                    onClick={() =>{
-                                      setarrayIndex(index);
-                                      setuserEntity(user);
-                                      handleShow();
-                                    }}
-                                  >Delete</Button></td>
+                                  <td>
+                                    <Button
+                                      variant="danger"
+                                      onClick={() => {
+                                        setarrayIndex(index);
+                                        setuserEntity(user);
+                                        handleShow();
+                                      }}
+                                    >
+                                      Delete
+                                    </Button>
+                                  </td>
                                 </tr>
-                                                                  
                               </>
                             ))}
                             <Modal show={show} onHide={handleClose}>
-                              <Modal.Body>Are you sure you want to delete that user</Modal.Body>
+                              <Modal.Body>
+                                Are you sure you want to delete that user
+                              </Modal.Body>
                               <Modal.Footer>
                                 <Button
                                   variant="danger"
-                                  onClick={() =>{
+                                  onClick={() => {
                                     deleteUser(arrayIndex);
                                     arrayHelpers.remove(arrayIndex);
                                     handleClose();
@@ -105,6 +154,38 @@ function Users() {
                                 </Button>
                                 <Button variant="success" onClick={handleClose}>
                                   No
+                                </Button>
+                              </Modal.Footer>
+                            </Modal>
+
+                            {/* Edit Modal */}
+                            <Modal show={showEdit} onHide={handleCloseEdit}>
+                              <Modal.Body>
+                                <TextAreaField
+                                  name="username"
+                                  placeholder="UserName"
+                                  disabled={isSubmitting}
+                                  value={values.username}
+                                />
+                                {/* <TextAreaField
+                                  name="director"
+                                  placeholder="Director"
+                                  disabled={isSubmitting}
+                                  value={values.director}
+                                /> */}
+                              </Modal.Body>
+                              <Modal.Footer>
+                                <Button
+                                  variant="primary"
+                                  onClick={() => {
+                                    handleSubmit();
+                                    handleCloseEdit();
+                                  }}
+                                >
+                                  {isSubmitting ? 'Editing...' : 'Edit'}
+                                </Button>
+                                <Button variant="danger" onClick={handleCloseEdit}>
+                                  Cancel
                                 </Button>
                               </Modal.Footer>
                             </Modal>
@@ -118,8 +199,8 @@ function Users() {
             );
           }}
         </Formik>
-      </div> 
-    </div>    
+      </div>
+    </div>
   );
 }
 

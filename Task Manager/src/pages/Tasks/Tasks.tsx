@@ -4,6 +4,7 @@ import * as taskmanager from 'api/taskmanager';
 import Form from 'components/generic/Form';
 import List from 'components/generic/ListItems/List';
 import { useAuth } from 'hooks/domain/useAuth';
+import { useQuery } from 'react-query';
 import classes from './Tasks.module.css';
 
 function Tasks() {
@@ -20,6 +21,8 @@ function Tasks() {
     },
   ];
   const allTasks = taskmanager.getAllTasks();
+  // const { data: allTasks } = useQuery(['tasks', 'all'], (key, u) =>  taskmanager.getAllTasks());
+ 
   const [tasks, setTasks] = useState<TaskModel[]>(allTasks);
 
   const updateTasks = useCallback( (items) => {
